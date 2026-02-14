@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl:*)",
+      "Bash(python3:*)",
+      "WebFetch(domain:www.jpl.nasa.gov)",
+      "WebFetch(domain:oceanxtremes.jpl.nasa.gov)",
+      "Bash(gh:*)",
+      "Bash(git -C /Users/alicedubois/JPL-notifier config --global user.name)",
+      "Bash(git -C /Users/alicedubois/JPL-notifier config --global user.email)"
+    ]
+  }
+}

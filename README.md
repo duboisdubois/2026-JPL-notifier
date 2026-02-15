@@ -1,7 +1,7 @@
 # JPL Tour Notifier
 
 
-The JPL notifier I built with a friend in 2024 stopped working. I wanted to experiment with Claude Code and I wanted to use Google Cloud instead of AWS so I started from scratch. 
+The JPL notifier I built with a friend in 2024 stopped working. I wanted to experiment with Claude Code and I wanted to use Google Cloud instead of AWS so I decided to build a new app from scratch.
 
 This app is a lightweight Cloud Run service that polls JPL's internal tour availability API every 2 minutes via Cloud Scheduler. When the API returns available dates, it triggers a Twilio voice call for immediate notification.
 

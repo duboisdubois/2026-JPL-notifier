@@ -1,6 +1,6 @@
 # JPL Tour Notifier — Setup Guide
 
-This app checks JPL's tour page every minute and texts you when Educational Group Tour dates become available.
+This app checks JPL's tour page every 2 minutes and texts you when Educational Group Tour dates become available.
 
 ---
 
@@ -90,8 +90,8 @@ gcloud run deploy jpl-tour-checker \
   --image us-central1-docker.pkg.dev/jpl-tour-notifier/jpl-notifier/jpl-tour-checker \
   --region us-central1 \
   --platform managed \
-  --memory 1Gi \
-  --timeout 120 \
+  --memory 256Mi \
+  --timeout 30 \
   --allow-unauthenticated \
   --set-env-vars "TWILIO_ACCOUNT_SID=ACxxxxxxxx,TWILIO_AUTH_TOKEN=your_token,TWILIO_PHONE_NUMBER=+1234567890,YOUR_PHONE_NUMBER=+1234567890"
 ```
@@ -115,7 +115,7 @@ curl https://jpl-tour-checker-xxxxx-uc.a.run.app/check
 
 ---
 
-## 4. Set Up Cloud Scheduler (runs every minute)
+## 4. Set Up Cloud Scheduler (runs every 2 minutes)
 
 ### Create a Service Account for the Scheduler
 ```bash
@@ -132,7 +132,7 @@ gcloud run services add-iam-policy-binding jpl-tour-checker \
 ```bash
 gcloud scheduler jobs create http jpl-tour-check \
   --location=us-central1 \
-  --schedule="* * * * *" \
+  --schedule="*/2 * * * *" \
   --uri="https://jpl-tour-checker-xxxxx-uc.a.run.app/check" \
   --http-method=GET \
   --oidc-service-account-email="scheduler-invoker@jpl-tour-notifier.iam.gserviceaccount.com"
@@ -140,8 +140,8 @@ gcloud scheduler jobs create http jpl-tour-check \
 
 Replace the URI with your actual Cloud Run URL from step 3.
 
-The schedule `* * * * *` means every minute. You can adjust:
-- `*/2 * * * *` — every 2 minutes
+The schedule `*/2 * * * *` means every 2 minutes. You can adjust:
+- `* * * * *` — every minute
 - `*/5 * * * *` — every 5 minutes
 
 ### Test the Scheduler
@@ -179,7 +179,7 @@ gcloud run services update jpl-tour-checker \
 
 ## Cost Estimate
 
-- **Cloud Run**: Free tier includes 2 million requests/month. This app uses ~43,200/month (1/min). Well within free tier.
+- **Cloud Run**: Free tier includes 2 million requests/month. This app uses ~21,600/month (1/2min). Well within free tier.
 - **Cloud Scheduler**: Free tier includes 3 jobs. This uses 1.
 - **Twilio**: Free trial gives you ~$15 credit. Each SMS costs ~$0.0079. You'll only be charged when a tour is actually found.
 - **Cloud Build**: Free tier includes 120 build-minutes/day.
